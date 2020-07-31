@@ -208,20 +208,22 @@ contract RelayerIncentivize is IRelayerIncentivize, System, IParamSubscriber {
     if (Memory.compareStrings(key,"moleculeHeaderRelayer")) {
       require(value.length == 32, "length of moleculeHeaderRelayer mismatch");
       uint256 newMoleculeHeaderRelayer = BytesToTypes.bytesToUint256(32, value);
+      require(newMoleculeHeaderRelayer <= denominatorHeaderRelayer, "new moleculeHeaderRelayer shouldn't be greater than denominatorHeaderRelayer");
       moleculeHeaderRelayer = newMoleculeHeaderRelayer;
     } else if (Memory.compareStrings(key,"denominatorHeaderRelayer")) {
       require(value.length == 32, "length of rewardForValidatorSetChange mismatch");
       uint256 newDenominatorHeaderRelayer = BytesToTypes.bytesToUint256(32, value);
-      require(newDenominatorHeaderRelayer != 0, "the newDenominatorHeaderRelayer must not be zero");
+      require(newDenominatorHeaderRelayer != 0 && newDenominatorHeaderRelayer >= moleculeHeaderRelayer, "the new denominatorHeaderRelayer must not be zero and no less than moleculeHeaderRelayer");
       denominatorHeaderRelayer = newDenominatorHeaderRelayer;
     } else if (Memory.compareStrings(key,"moleculeCallerCompensation")) {
       require(value.length == 32, "length of rewardForValidatorSetChange mismatch");
       uint256 newMoleculeCallerCompensation = BytesToTypes.bytesToUint256(32, value);
+      require(newMoleculeCallerCompensation <= denominatorCallerCompensation, "new moleculeCallerCompensation shouldn't be greater than denominatorCallerCompensation");
       moleculeCallerCompensation = newMoleculeCallerCompensation;
     } else if (Memory.compareStrings(key,"denominatorCallerCompensation")) {
       require(value.length == 32, "length of rewardForValidatorSetChange mismatch");
       uint256 newDenominatorCallerCompensation = BytesToTypes.bytesToUint256(32, value);
-      require(newDenominatorCallerCompensation != 0, "the newDenominatorCallerCompensation must not be zero");
+      require(newDenominatorCallerCompensation != 0 && newDenominatorCallerCompensation >= moleculeCallerCompensation, "the newDenominatorCallerCompensation must not be zero and no less than moleculeCallerCompensation");
       denominatorCallerCompensation = newDenominatorCallerCompensation;
     } else {
       require(false, "unknown param");
