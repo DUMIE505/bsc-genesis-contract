@@ -143,7 +143,8 @@ contract TokenManager is System, IApplication {
       status: verifyCode,
       bep2TokenSymbol: bep2TokenSymbol
     });
-    address(uint160(TOKEN_HUB_ADDR)).transfer(relayFee);
+    (bool success, ) = TOKEN_HUB_ADDR.call{value: relayFee}("");
+    require(success, "Transfer relayer fee to TokenHub failed");
     ICrossChain(CROSS_CHAIN_CONTRACT_ADDR).sendSynPackage(BIND_CHANNELID, encodeApproveBindSynPackage(approveBindSynPackage), relayFee.div(1e10));
     return true;
   }
@@ -162,7 +163,8 @@ contract TokenManager is System, IApplication {
       status: BIND_STATUS_REJECTED,
       bep2TokenSymbol: bep2TokenSymbol
     });
-    address(uint160(TOKEN_HUB_ADDR)).transfer(relayFee);
+    (bool success, ) = TOKEN_HUB_ADDR.call{value: relayFee}("");
+    require(success, "Transfer relayer fee to TokenHub failed");
     ICrossChain(CROSS_CHAIN_CONTRACT_ADDR).sendSynPackage(BIND_CHANNELID, encodeApproveBindSynPackage(approveBindSynPackage), relayFee.div(1e10));
     emit bindFailure(contractAddr, bep2Symbol, BIND_STATUS_REJECTED);
     return true;
@@ -181,7 +183,8 @@ contract TokenManager is System, IApplication {
       status: BIND_STATUS_TIMEOUT,
       bep2TokenSymbol: bep2TokenSymbol
     });
-    address(uint160(TOKEN_HUB_ADDR)).transfer(relayFee);
+    (bool success, ) = TOKEN_HUB_ADDR.call{value: relayFee}("");
+    require(success, "Transfer relayer fee to TokenHub failed");
     ICrossChain(CROSS_CHAIN_CONTRACT_ADDR).sendSynPackage(BIND_CHANNELID, encodeApproveBindSynPackage(approveBindSynPackage), relayFee.div(1e10));
     emit bindFailure(bindSynPkg.contractAddr, bep2Symbol, BIND_STATUS_TIMEOUT);
     return true;

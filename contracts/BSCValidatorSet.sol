@@ -276,8 +276,9 @@ contract BSCValidatorSet is IBSCValidatorSet, System, IParamSubscriber, IApplica
 
     // step 4: do dusk transfer
     if (address(this).balance>0) {
+      (bool success, ) = SYSTEM_REWARD_ADDR.call{value: address(this).balance}("");
+      require(success, "Transfer the remaining BNB to SystemReward failed");
       emit systemTransfer(address(this).balance);
-      address(uint160(SYSTEM_REWARD_ADDR)).transfer(address(this).balance);
     }
     // step 5: do update validator set state
     totalInComing = 0;
